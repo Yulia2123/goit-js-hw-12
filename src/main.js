@@ -40,6 +40,8 @@ async function handleSubmit(event) {
     const data = await getImagesByQuery(currentQuery, currentPage);
 
     if (data.hits.length === 0) {
+      hideLoadMoreButton();
+
       iziToast.error({
         message:
           'Sorry, there are no images matching your search query. Please try again!',
@@ -60,7 +62,9 @@ async function handleSubmit(event) {
       });
     }
   } catch (error) {
-    console.log(error);
+    iziToast.error({
+      message: 'Something went wrong. Please try again later.',
+    });
   } finally {
     hideLoader();
   }
@@ -69,6 +73,7 @@ async function handleSubmit(event) {
 async function handleLoadMore() {
   currentPage += 1;
 
+  hideLoadMoreButton();
   showLoader();
 
   try {
@@ -78,7 +83,9 @@ async function handleLoadMore() {
 
     const totalPages = Math.ceil(data.totalHits / PER_PAGE);
 
-    if (currentPage >= totalPages) {
+    if (currentPage < totalPages) {
+      hideLoadMoreButton();
+    } else {
       hideLoadMoreButton();
 
       iziToast.info({
@@ -88,7 +95,9 @@ async function handleLoadMore() {
 
     scrollPage();
   } catch (error) {
-    console.log(error);
+    iziToast.error({
+      message: 'Something went wrong. Please try again later.',
+    });
   } finally {
     hideLoader();
   }
