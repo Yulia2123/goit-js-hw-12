@@ -84,7 +84,7 @@ async function handleLoadMore() {
     const totalPages = Math.ceil(data.totalHits / PER_PAGE);
 
     if (currentPage < totalPages) {
-      hideLoadMoreButton();
+      showLoadMoreButton();
     } else {
       hideLoadMoreButton();
 
